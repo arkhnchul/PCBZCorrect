@@ -1,24 +1,14 @@
 package biz.wolschon.cnc.pcbzcorrect;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.HeadlessException;
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Rectangle2D;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.MessageFormat;
@@ -26,19 +16,6 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.filechooser.FileFilter;
-import org.apache.commons.io.FilenameUtils;
 
 
 public class Main {
@@ -156,6 +133,29 @@ public class Main {
 
     }
 
+    public static String getExtension(String filename){
+        String extension = "";
+
+        int i = filename.lastIndexOf('.');
+        int p = Math.max(filename.lastIndexOf('/'), filename.lastIndexOf('\\'));
+
+        if (i > p) {
+            extension = filename.substring(i+1);
+        }
+        return extension;
+    }
+
+    public static String removeExtension(String filename){
+        String ext=getExtension(filename);
+        String out;
+        if(ext!=null && ext.length()>0){
+            out=filename.substring(0,filename.lastIndexOf(ext)-1);
+        }else{
+            out=filename;
+        }
+        return out;
+    }
+
     private static void doWork(String[] args, boolean graphical) {
         File infile = new File(args[0]);
         log("determining dimensions of " + infile.getName() + "...");
@@ -183,8 +183,8 @@ public class Main {
         String var26;
         try {
             String outfile = infile.getAbsolutePath();
-            var26 = FilenameUtils.removeExtension(outfile);
-            fileExt = FilenameUtils.getExtension(infile.getAbsolutePath());
+            var26 = removeExtension(outfile);
+            fileExt = getExtension(infile.getAbsolutePath());
         } catch (Exception var23) {
             log("Error get file name:" + var23.getMessage());
             return;

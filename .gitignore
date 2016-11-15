@@ -1,6 +1,10 @@
 bin
 *.class
+out
 
 # Package Files #
 *.war
 *.ear
+*.iml
+.idea
+.idea/*
